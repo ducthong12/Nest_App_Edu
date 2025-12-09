@@ -1,6 +1,7 @@
 import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
 import { Injectable } from '@nestjs/common';
 import S3 from './config/s3.config';
+import { getSignedUrl } from '@aws-sdk/cloudfront-signer';
 
 @Injectable()
 export class StorageService {
@@ -22,10 +23,31 @@ export class StorageService {
     try {
       await this.s3Client.send(command);
 
+      // const objectCommand = new GetObjectCommand({
+      //   Bucket: process.env.AWS_BUCKET_NAME,
+      //   Key: key,
+      // });
+      // Comment code below if you don't want to generate a signed URL
+      // const publicUrl = await getSignedUrl(this.s3Client, objectCommand, {
+      //   expiresIn: 3600,
+      // });
+      //// Using cloudfront + public key pair to generate signed URL
+      const cloudfrontDistributionDomain = process.env.AWS_CLOUDFRONT_S3_DOMAIN;
+      const url = `${cloudfrontDistributionDomain}/${key}`;
+      const keyPairId = process.env.AWS_CLOUDFRONT_KEY_PAIR_ID;
+      const privateKey = process.env.AWS_CLOUDFRONT_PRIVATE_KEY;
+      const dateLessThan = new Date(new Date().getTime() + 10 * 60 * 1000); // 10 minutes
+      const publicUrl = getSignedUrl({
+        url,
+        keyPairId,
+        privateKey,
+        dateLessThan,
+      });
       //
       return {
         key: key,
-        url: `https://${process.env.AWS_BUCKET_NAME}.s3.${process.env.AWS_REGION_ID}.amazonaws.com/${key}`,
+        // url: `https://${process.env.AWS_BUCKET_NAME}.s3.${process.env.AWS_REGION_ID}.amazonaws.com/${key}`,
+        publicUrl: publicUrl,
       };
     } catch (error) {
       // Handle error appropriately
