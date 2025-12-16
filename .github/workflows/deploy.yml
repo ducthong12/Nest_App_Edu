@@ -1,0 +1,52 @@
+name: CI/CD
+
+on:
+  push:
+    branches: ['main']
+
+jobs:
+  # JOB 1: BUILD & PUSH (Vẫn nên chạy trên Cloud để tiết kiệm CPU cho Server thật)
+  build-and-push:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Login Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build and push
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./Dockerfile
+          push: true
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/my-app:latest # (Giả sử build chung hoặc dùng matrix như cũ)
+          # ... (Phần matrix build giữ nguyên như cũ của bạn)
+
+  # JOB 2: DEPLOY (Chạy trực tiếp trên EC2 qua Self-hosted Runner)
+  deploy:
+    needs: build-and-push
+    runs-on: self-hosted # <--- KHÁC BIỆT LỚN NHẤT: Chạy trên máy của bạn
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        # Runner sẽ tự pull code về thư mục làm việc trên EC2
+
+      - name: Deploy to Docker
+        run: |
+          # 1. Tạo file .env (Runner đang ở ngay thư mục source code)
+          echo "DOCKER_USERNAME=${{ secrets.DOCKERHUB_USERNAME }}" > .env
+          echo "DATABASE_URL=${{ secrets.DATABASE_URL }}" >> .env
+
+          # 2. Pull image mới về
+          docker compose pull
+
+          # 3. Up lại container
+          docker compose up -d --remove-orphans
+
+          # 4. Dọn dẹp
+          docker system prune -f
