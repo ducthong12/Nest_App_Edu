@@ -58,7 +58,7 @@ jobs:
           echo "DATABASE_URL=${{ secrets.DATABASE_URL }}" >> .env
           echo "AWS_BUCKET_ACCESS_KEY=${{ secrets.AWS_BUCKET_ACCESS_KEY }}" >> .env
           echo "AWS_BUCKET_NAME=${{ secrets.AWS_BUCKET_NAME }}" >> .env
-          echo "AWS_BUCKET_SECRET_KEY=${{ secrets.AWS_BUCKET_SECRET_KEY }}" >> .env
+          echo "AWS_BUCKET_SECRET_KEY=\"${{ secrets.AWS_BUCKET_SECRET_KEY }}\"" >> .env
           echo "AWS_CLOUDFRONT_KEY_PAIR_ID=${{ secrets.AWS_CLOUDFRONT_KEY_PAIR_ID }}" >> .env
           echo "AWS_CLOUDFRONT_PRIVATE_KEY=${{ secrets.AWS_CLOUDFRONT_PRIVATE_KEY }}" >> .env
           echo "AWS_CLOUDFRONT_S3_DOMAIN=${{ secrets.AWS_CLOUDFRONT_S3_DOMAIN }}" >> .env
