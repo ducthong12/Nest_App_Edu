@@ -4,4 +4,5 @@ export const PORT_GRPC = {
 
 export const NAME_SERVICE_GRPC = {
   USER_SERVICE: 'USER_SERVICE',
+  USER_PACKAGE: 'USER_PACKAGE',
 };

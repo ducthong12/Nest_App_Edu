@@ -9,7 +9,7 @@ import { NAME_SERVICE_GRPC } from 'common/constants/port-grpc.constant';
   imports: [
     ClientsModule.register([
       {
-        name: NAME_SERVICE_GRPC.USER_SERVICE,
+        name: NAME_SERVICE_GRPC.USER_PACKAGE,
         transport: Transport.GRPC,
         options: {
           package: NAME_SERVICE_GRPC.USER_SERVICE,
