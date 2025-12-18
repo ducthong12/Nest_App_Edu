@@ -1,8 +1,8 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { ClientGrpc } from '@nestjs/microservices';
-import { NAME_SERVICE_GRPC } from 'common/constants/port-grpc.constant';
 import { catchError, firstValueFrom, throwError, timeout } from 'rxjs';
 import { UserGrpcDto } from './dto/user-grpc.dto';
+import { NAME_SERVICE_GRPC } from '@common/constants/port-grpc.constant';
 
 @Injectable()
 export class UserService {

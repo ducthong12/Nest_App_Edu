@@ -6,7 +6,7 @@ import { join } from 'path';
 import {
   NAME_SERVICE_GRPC,
   PORT_GRPC,
-} from 'common/constants/port-grpc.constant';
+} from '@common/constants/port-grpc.constant';
 
 async function bootstrap() {
   const app = await NestFactory.createMicroservice<MicroserviceOptions>(
@@ -14,8 +14,8 @@ async function bootstrap() {
     {
       transport: Transport.GRPC,
       options: {
-        package: NAME_SERVICE_GRPC.USER_SERVICE,
-        protoPath: join(__dirname, '/common/proto/user.proto'), // Đường dẫn đến file proto
+        package: NAME_SERVICE_GRPC.USER_PACKAGE,
+        protoPath: join(__dirname, '/user.proto'), // Đường dẫn đến file proto
         url: `0.0.0.0:${PORT_GRPC.USER_PORT_GRPC}`, // Lắng nghe trên port 50051
       },
     },

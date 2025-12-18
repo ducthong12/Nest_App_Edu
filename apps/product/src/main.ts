@@ -1,5 +1,5 @@
 import { NestFactory } from '@nestjs/core';
-import { InventoryModule } from './inventory.module';
+import { ProductModule } from './product.module';
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 import { join } from 'path';
 import {
@@ -9,13 +9,13 @@ import {
 
 async function bootstrap() {
   const app = await NestFactory.createMicroservice<MicroserviceOptions>(
-    InventoryModule,
+    ProductModule,
     {
       transport: Transport.GRPC,
       options: {
-        package: NAME_SERVICE_GRPC.INVENTORY_PACKAGE,
-        protoPath: join(__dirname, '/common/inventory.proto'), // Đường dẫn đến file proto
-        url: `0.0.0.0:${PORT_GRPC.INVENTORY_PORT_GRPC}`,
+        package: NAME_SERVICE_GRPC.PRODUCT_PACKAGE,
+        protoPath: join(__dirname, '/product.proto'), // Đường dẫn đến file proto
+        url: `0.0.0.0:${PORT_GRPC.PRODUCT_PORT_GRPC}`, // Lắng nghe trên port 50052
       },
     },
   );
@@ -25,8 +25,8 @@ async function bootstrap() {
 
 bootstrap()
   .then(() => {
-    console.log('Inventory Service Successfully Started');
+    console.log('User Service Successfully Started');
   })
   .catch(() => {
-    console.error('Inventory Service Fail Started');
+    console.error('User Service Fail Started');
   });

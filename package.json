@@ -22,7 +22,10 @@
     "start:storage": "nest start storage --watch",
     "start:analytics": "nest start analytics --watch",
     "start:user": "nest start user --watch",
-    "start:all": "concurrently \"npm run start:apigateway\" \"npm run start:storage\" \"npm run start:analytics\" \"npm run start:user\"",
+    "start:order": "nest start order --watch",
+    "start:inventory": "nest start inventory --watch",
+    "start:product": "nest start product --watch",
+    "start:all": "concurrently \"npm run start:apigateway\" \"npm run start:storage\" \"npm run start:analytics\" \"npm run start:user\" \"npm run start:inventory\" \"npm run start:product\"",
     "generate:prisma": "npx prisma generate",
     "generate:prisma-docs": "npx prisma generate docs"
   },
@@ -30,10 +33,14 @@
     "@aws-sdk/client-s3": "^3.943.0",
     "@aws-sdk/cloudfront-signer": "^3.946.0",
     "@aws-sdk/s3-request-presigner": "^3.946.0",
+    "@grpc/grpc-js": "^1.14.3",
+    "@grpc/proto-loader": "^0.8.0",
     "@nestjs/common": "^11.1.9",
+    "@nestjs/config": "^4.0.2",
     "@nestjs/core": "^11.1.9",
     "@nestjs/mapped-types": "^2.1.0",
     "@nestjs/microservices": "^11.1.9",
+    "@nestjs/mongoose": "^11.0.4",
     "@nestjs/platform-express": "^11.1.9",
     "@nestjs/swagger": "^11.2.3",
     "@nestjs/throttler": "^6.5.0",
@@ -42,6 +49,7 @@
     "concurrently": "^9.2.1",
     "dotenv": "^17.2.3",
     "helmet": "^8.1.0",
+    "mongoose": "^9.0.2",
     "prisma": "^5.22.0",
     "prisma-docs-generator": "^0.8.0",
     "reflect-metadata": "^0.2.0",
@@ -88,7 +96,14 @@
     "coverageDirectory": "./coverage",
     "testEnvironment": "node",
     "roots": [
-      "<rootDir>/apps/"
-    ]
+      "<rootDir>/apps/",
+      "<rootDir>/libs/"
+    ],
+    "moduleNameMapper": {
+      "^yes/database(|/.*)$": "<rootDir>/libs/database/src/$1",
+      "^yes/mongodb(|/.*)$": "<rootDir>/libs/mongodb/src/$1",
+      "^yes/constants(|/.*)$": "<rootDir>/libs/constants/src/$1",
+      "^yes/decorators(|/.*)$": "<rootDir>/libs/decorators/src/$1"
+    }
   }
 }

@@ -3,17 +3,21 @@ import { UserService } from './user.service';
 import { UserController } from './user.controller';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { join } from 'path';
-import { NAME_SERVICE_GRPC } from 'common/constants/port-grpc.constant';
+import {
+  NAME_SERVICE_GRPC,
+  PORT_GRPC,
+} from '@common/constants/port-grpc.constant';
 
 @Module({
   imports: [
     ClientsModule.register([
       {
-        name: NAME_SERVICE_GRPC.USER_PACKAGE,
+        name: NAME_SERVICE_GRPC.USER_SERVICE,
         transport: Transport.GRPC,
         options: {
-          package: NAME_SERVICE_GRPC.USER_SERVICE,
-          protoPath: join(__dirname, '/common/proto/user.proto'),
+          package: NAME_SERVICE_GRPC.USER_PACKAGE,
+          protoPath: join(__dirname, '/user.proto'),
+          url: `0.0.0.0:${PORT_GRPC.USER_PORT_GRPC}`,
         },
       },
     ]),
