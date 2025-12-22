@@ -6,7 +6,7 @@ export const PORT_GRPC = {
 };
 
 export const NAME_SERVICE_GRPC = {
-  USER_SERVICE: 'USER_SERVICE',
+  USER_SERVICE: 'UserService',
   USER_PACKAGE: 'user',
   ORDER__SERVICE: 'ORDER_SERVICE',
   ORDER_PACKAGE: 'order',
