@@ -15,7 +15,7 @@ async function bootstrap() {
       options: {
         package: NAME_SERVICE_GRPC.USER_PACKAGE,
         protoPath: join(__dirname, '/user.proto'), // Đường dẫn đến file proto
-        url: `localhost:${PORT_GRPC.USER_PORT_GRPC}`, // Lắng nghe trên port 50051
+        url: `0.0.0.0:${PORT_GRPC.USER_PORT_GRPC}`, // Lắng nghe trên port 50051
       },
     },
   );

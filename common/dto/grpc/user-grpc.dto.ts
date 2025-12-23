@@ -1,6 +1,6 @@
 import { Observable } from 'rxjs';
-import { CreateUserDto } from './user/create-user.dto';
-import { LoginUserDto } from './user.dto';
+import { CreateUserDto } from '../user/create-user.dto';
+import { LoginUserDto } from '../user/user.dto';
 
 export class UserGrpcDto {
   getUserInfo: (data: { id: number }) => Observable<any>;
