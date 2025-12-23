@@ -10,17 +10,17 @@ export class ProductController {
 
   @Post('createProduct')
   async createProduct(@Body() createProductDto: CreateProductDto) {
-    return this.productService.createProduct(createProductDto);
+    return await this.productService.createProduct(createProductDto);
   }
 
   @Get('findAllProducts')
   async findAllProducts() {
-    return this.productService.findAllProducts();
+    return await this.productService.findAllProducts();
   }
 
   @Get('findOneProduct')
   async findOneProduct(id: number) {
-    return this.productService.findOneProduct(id);
+    return await this.productService.findOneProduct(id);
   }
 
   // @Patch('updateProduct')
@@ -38,11 +38,11 @@ export class ProductController {
 
   @Post('createBrand')
   async createBrand(@Body() createBrandDto: CreateBrandDto) {
-    return this.productService.createBrand(createBrandDto);
+    return await this.productService.createBrand(createBrandDto);
   }
 
   @Post('createCategory')
   async createCategory(@Body() createCategoryDto: CreateCategoryDto) {
-    return this.productService.createCategory(createCategoryDto);
+    return await this.productService.createCategory(createCategoryDto);
   }
 }

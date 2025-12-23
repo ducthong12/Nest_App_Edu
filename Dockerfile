@@ -1,34 +1,39 @@
 # --- Stage 1: Base & Dependencies ---
 FROM node:20-alpine AS base
 
-# Cài đặt libc6-compat nếu cần thiết cho Prisma trên Alpine
-RUN apk add --no-cache libc6-compat
+# Cài thư viện hệ thống cần thiết để build (python, make, g++ có thể cần cho một số thư viện npm)
+RUN apk add --no-cache libc6-compat openssl
 
 WORKDIR /app
 
-# Copy package files để cài đặt dependencies trước (tận dụng Docker cache)
 COPY package*.json ./
-COPY prisma ./prisma/
 
 # Cài đặt dependencies
 RUN npm ci
 
-# Generate Prisma Client (Rất quan trọng để Prisma hoạt động)
-RUN npx prisma generate
-
-# --- Stage 2: Build ---
+# --- Stage 2: Builder (QUAN TRỌNG: Chuyển generate xuống đây) ---
 FROM base AS builder
 
 WORKDIR /app
 
-# Copy toàn bộ source code (bao gồm apps, common, prisma, libs...)
+# 1. Copy toàn bộ source code vào trước (Lúc này mới có folder apps/user/prisma)
 COPY . .
 
-# Copy node_modules từ stage trước
+# 2. Copy node_modules từ stage base
 COPY --from=base /app/node_modules ./node_modules
 
-# Nhận tên App cần build từ Docker Compose
 ARG APP_NAME
+
+# 3. Generate Prisma Client TẠI ĐÂY (Vì source code đã có)
+# Kiểm tra file schema, nếu có thì generate
+RUN if [ -f "apps/${APP_NAME}/prisma/schema.prisma" ]; then \
+      echo "🟢 Found Prisma schema for ${APP_NAME}, generating client..."; \
+      npx prisma generate --schema=apps/${APP_NAME}/prisma/schema.prisma; \
+    else \
+      echo "🟡 No Prisma schema found for ${APP_NAME}, skipping..."; \
+    fi
+
+# 4. Build App
 RUN npm run build ${APP_NAME}
 
 # --- Stage 3: Production Runner ---
@@ -39,15 +44,16 @@ WORKDIR /app
 # Thiết lập biến môi trường
 ENV NODE_ENV production
 
-# Copy node_modules (chứa cả Prisma client đã generate)
-COPY --from=base /app/node_modules ./node_modules
+# Copy package.json
 COPY --from=base /app/package*.json ./
 
-# Nhận tên App để copy đúng thư mục dist
+# Copy node_modules TỪ BUILDER (Vì ở builder mình đã chạy prisma generate, nó sửa đổi node_modules)
+COPY --from=builder /app/node_modules ./node_modules
+
 ARG APP_NAME
 
-# Copy folder dist của app tương ứng từ builder
+# Copy folder dist
 COPY --from=builder /app/dist/apps/${APP_NAME} ./dist
 
-# Command để chạy app
+# Command chạy app
 CMD ["node", "dist/main"]

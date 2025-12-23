@@ -7,7 +7,7 @@ export class InventoryController {
   constructor(private readonly inventoryService: InventoryService) {}
 
   @Post('restockProduct')
-  restockProduct(@Body() restockProductDto: RestockProductDto) {
-    return this.inventoryService.restockProduct(restockProductDto);
+  async restockProduct(@Body() restockProductDto: RestockProductDto) {
+    return await this.inventoryService.restockProduct(restockProductDto);
   }
 }

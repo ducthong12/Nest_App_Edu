@@ -30,6 +30,6 @@ bootstrap()
   .then(() => {
     console.log('User Service Successfully Started');
   })
-  .catch(() => {
-    console.error('User Service Fail Started');
+  .catch((error) => {
+    console.error('User Service Fail Started', error);
   });

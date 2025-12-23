@@ -8,6 +8,7 @@ import { UserModule } from './user/user.module';
 import { RateLimitGuard } from '@common/guards/rate-limit.guard';
 import { ProductModule } from './product/product.module';
 import { InventoryModule } from './inventory/inventory.module';
+import { OrderModule } from './order/order.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { InventoryModule } from './inventory/inventory.module';
     UserModule,
     ProductModule,
     InventoryModule,
+    OrderModule,
   ],
   controllers: [ApiGatewayController],
   providers: [
