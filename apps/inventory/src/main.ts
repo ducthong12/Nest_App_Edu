@@ -27,6 +27,6 @@ bootstrap()
   .then(() => {
     console.log('Inventory Service Successfully Started');
   })
-  .catch(() => {
-    console.error('Inventory Service Fail Started');
+  .catch((error) => {
+    console.error('Inventory Service Fail Started', error);
   });

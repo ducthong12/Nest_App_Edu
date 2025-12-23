@@ -12,6 +12,6 @@ export const NAME_SERVICE_GRPC = {
   ORDER_PACKAGE: 'order',
   PRODUCT_SERVICE: 'ProductService',
   PRODUCT_PACKAGE: 'product',
-  INVENTORY_SERVICE: 'INVENTORY_SERVICE',
+  INVENTORY_SERVICE: 'InventoryService',
   INVENTORY_PACKAGE: 'inventory',
 };

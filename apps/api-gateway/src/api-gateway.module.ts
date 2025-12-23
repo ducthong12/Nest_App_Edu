@@ -7,6 +7,7 @@ import { ThrottlerModule } from '@nestjs/throttler';
 import { UserModule } from './user/user.module';
 import { RateLimitGuard } from '@common/guards/rate-limit.guard';
 import { ProductModule } from './product/product.module';
+import { InventoryModule } from './inventory/inventory.module';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { ProductModule } from './product/product.module';
     ]),
     UserModule,
     ProductModule,
+    InventoryModule,
   ],
   controllers: [ApiGatewayController],
   providers: [

@@ -2,25 +2,8 @@ syntax = "proto3";
 
 package inventory;
 
-service INVENTORY_SERVICE {
-  // Lấy thông tin kho của 1 sản phẩm (theo productId)
-  rpc GetStock (GetStockRequest) returns (InventoryResponse);
-
-  // Nhập kho (Restock/Inbound)
-  rpc AddStock (AddStockRequest) returns (InventoryResponse);
-
-  // Giữ hàng (Reserve) - Dùng khi khách vừa đặt đơn (Order Placed)
-  rpc ReserveStock (ReserveStockRequest) returns (InventoryResponse);
-
-  // Hủy giữ hàng (Release) - Dùng khi khách hủy đơn hoặc hết giờ thanh toán
-  rpc ReleaseStock (ReleaseStockRequest) returns (InventoryResponse);
-
-  // Xuất kho/Bán (Outbound) - Dùng khi đơn hàng đã thanh toán thành công
-  // Thường là chuyển từ Reserved -> Outbound (trừ hẳn khỏi kho)
-  rpc ReduceStock (ReduceStockRequest) returns (InventoryResponse);
-
-  // Xem lịch sử giao dịch (Audit Log)
-  rpc GetTransactionHistory (GetHistoryRequest) returns (HistoryResponse);
+service InventoryService {
+  rpc RestockProduct (RestockProductRequest) returns (InventoryResponse);
 }
 
 // --- ENUMS ---
@@ -49,53 +32,9 @@ message InventoryResponse {
   string last_updated = 7;     // ISO Date String
 }
 
-message InventoryTransaction {
-  int64 id = 1;           // BigInt trong Prisma map sang int64
-  int32 inventory_id = 2;
-  TransactionType type = 3;
-  int32 quantity = 4;
-  string reason = 5;
-  string created_at = 6;
+message RestockProductRequest {
+  string productId = 1;
+  string sku = 2;
+  int32 quantity = 3;
 }
 
-// --- REQUEST DTOs ---
-
-message GetStockRequest {
-  string product_id = 1;
-}
-
-message AddStockRequest {
-  string product_id = 1;
-  int32 quantity = 2;
-  string reason = 3; // VD: "Nhập lô hàng tháng 12"
-  string sku = 4;    // Cần SKU nếu tạo mới kho lần đầu
-}
-
-message ReserveStockRequest {
-  string product_id = 1;
-  int32 quantity = 2;
-  string order_id = 3; // Reason thường là Order ID
-}
-
-message ReleaseStockRequest {
-  string product_id = 1;
-  int32 quantity = 2;
-  string order_id = 3;
-}
-
-message ReduceStockRequest {
-  string product_id = 1;
-  int32 quantity = 2;
-  string order_id = 3;
-}
-
-message GetHistoryRequest {
-  string product_id = 1;
-  int32 page = 2;
-  int32 limit = 3;
-}
-
-message HistoryResponse {
-  repeated InventoryTransaction transactions = 1;
-  int32 total = 2;
-}

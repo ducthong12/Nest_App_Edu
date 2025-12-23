@@ -5,6 +5,8 @@ import { ProductGrpcDto } from 'common/dto/grpc/product-grpc.dto';
 import { CreateBrandDto } from 'common/dto/product/create-brand.dto';
 import { CreateCategoryDto } from 'common/dto/product/create-category.dto';
 import { CreateProductDto } from 'common/dto/product/create-product.dto';
+import { MicroserviceErrorHandler } from '../common/microservice-error.handler';
+import { catchError, firstValueFrom, throwError, timeout } from 'rxjs';
 
 @Injectable()
 export class ProductService {
@@ -20,24 +22,89 @@ export class ProductService {
     );
   }
 
-  createProduct(createProductDto: CreateProductDto) {
-    return this.productService.createProduct(createProductDto);
+  async createProduct(createProductDto: CreateProductDto) {
+    try {
+      return await firstValueFrom(
+        this.productService.createProduct(createProductDto).pipe(
+          timeout(10000),
+          catchError((error) => throwError(() => error)),
+        ),
+      );
+    } catch (error) {
+      MicroserviceErrorHandler.handleError(
+        error,
+        `create product: ${JSON.stringify(createProductDto)}`,
+        'Product Service',
+      );
+    }
   }
 
-  findAllProducts() {
-    return this.productService.findAllProducts({});
+  async findAllProducts() {
+    try {
+      return await firstValueFrom(
+        this.productService.findAllProducts({}).pipe(
+          timeout(10000),
+          catchError((error) => throwError(() => error)),
+        ),
+      );
+    } catch (error) {
+      MicroserviceErrorHandler.handleError(
+        error,
+        `findAllProducts`,
+        'Product Service',
+      );
+    }
   }
 
-  findOneProduct(id: number) {
-    return this.productService.findOneProduct({ id });
+  async findOneProduct(id: number) {
+    try {
+      return await firstValueFrom(
+        this.productService.findOneProduct({ id }).pipe(
+          timeout(10000),
+          catchError((error) => throwError(() => error)),
+        ),
+      );
+    } catch (error) {
+      MicroserviceErrorHandler.handleError(
+        error,
+        `findOneProduct with ID: ${id}`,
+        'Product Service',
+      );
+    }
   }
 
-  createCategory(createCategoryDto: CreateCategoryDto) {
-    return this.productService.createCategory(createCategoryDto);
+  async createCategory(createCategoryDto: CreateCategoryDto) {
+    try {
+      return await firstValueFrom(
+        this.productService.createCategory(createCategoryDto).pipe(
+          timeout(10000),
+          catchError((error) => throwError(() => error)),
+        ),
+      );
+    } catch (error) {
+      MicroserviceErrorHandler.handleError(
+        error,
+        `createCategory with DTO: ${JSON.stringify(createCategoryDto)}`,
+        'Product Service',
+      );
+    }
   }
 
-  createBrand(createBrandDto: CreateBrandDto) {
-    return this.productService.createBrand(createBrandDto);
+  async createBrand(createBrandDto: CreateBrandDto) {
+    try {
+      return await firstValueFrom(
+        this.productService.createBrand(createBrandDto).pipe(
+          timeout(10000),
+          catchError((error) => throwError(() => error)),
+        ),
+      );
+    } catch (error) {
+      MicroserviceErrorHandler.handleError(
+        error,
+        `createBrand with DTO: ${JSON.stringify(createBrandDto)}`,
+        'Product Service',
+      );
+    }
   }
 
   // updateProduct(id: number, updateProductDto: UpdateProductDto) {

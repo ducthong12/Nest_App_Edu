@@ -9,17 +9,17 @@ export class ProductController {
   constructor(private readonly productService: ProductService) {}
 
   @Post('createProduct')
-  createProduct(@Body() createProductDto: CreateProductDto) {
+  async createProduct(@Body() createProductDto: CreateProductDto) {
     return this.productService.createProduct(createProductDto);
   }
 
   @Get('findAllProducts')
-  findAllProducts() {
+  async findAllProducts() {
     return this.productService.findAllProducts();
   }
 
   @Get('findOneProduct')
-  findOneProduct(id: number) {
+  async findOneProduct(id: number) {
     return this.productService.findOneProduct(id);
   }
 
@@ -37,12 +37,12 @@ export class ProductController {
   // }
 
   @Post('createBrand')
-  createBrand(@Body() createBrandDto: CreateBrandDto) {
+  async createBrand(@Body() createBrandDto: CreateBrandDto) {
     return this.productService.createBrand(createBrandDto);
   }
 
   @Post('createCategory')
-  createCategory(@Body() createCategoryDto: CreateCategoryDto) {
+  async createCategory(@Body() createCategoryDto: CreateCategoryDto) {
     return this.productService.createCategory(createCategoryDto);
   }
 }

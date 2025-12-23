@@ -3,6 +3,7 @@ import { RedisService } from '@app/redis/redis.service';
 import { Injectable, Inject, BadRequestException } from '@nestjs/common';
 import { ClientKafka } from '@nestjs/microservices';
 import { PrismaInventoryService } from '../prisma/prismaInventory.service';
+import { RestockProductDto } from 'common/dto/restock/restock-product.dto';
 
 @Injectable()
 export class InventoryService {
@@ -16,22 +17,27 @@ export class InventoryService {
    * 1. SHOP NHẬP HÀNG THÊM (RESTOCK)
    * Yêu cầu: Đang sale thì shop tăng sản phẩm -> Cập nhật ngay.
    */
-  async restockProduct(productId: string, quantity: number, sku: string) {
+  async restockProduct(data: RestockProductDto) {
     // B1: Update Database (Postgres) để lưu trữ bền vững
     // Sử dụng upsert: Nếu chưa có thì tạo mới, có rồi thì cộng thêm
-    await this.prismaInventory.inventory.upsert({
-      where: { productId },
-      update: { stockQuantity: { increment: quantity } },
-      create: { productId, stockQuantity: quantity, reservedStock: 0, sku },
+    const result = await this.prismaInventory.inventory.upsert({
+      where: { productId: data.productId },
+      update: { stockQuantity: { increment: data.quantity } },
+      create: {
+        productId: data.productId,
+        stockQuantity: data.quantity,
+        reservedStock: 0,
+        sku: data.sku,
+      },
     });
 
     // B2: Update Redis (Cache) để phục vụ bán hàng ngay lập tức
-    await this.redisService.addStockAtomic(productId, quantity);
+    await this.redisService.addStockAtomic(data.productId, data.quantity);
 
     // B3: Bắn Event (Optional - để các service khác như Search cập nhật lại index)
     // this.kafkaClient.emit('inventory.restocked', { productId, quantity });
 
-    return { message: 'Restock successful', added: quantity };
+    return result;
   }
 
   /**

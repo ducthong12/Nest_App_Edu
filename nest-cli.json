@@ -28,6 +28,11 @@
             "include": "../../../common/proto/product.proto",
             "outDir": "./dist/apps/api-gateway/product.proto",
             "watchAssets": true
+          },
+          {
+            "include": "../../../common/proto/inventory.proto",
+            "outDir": "./dist/apps/api-gateway/inventory.proto",
+            "watchAssets": true
           }
         ]
       }
