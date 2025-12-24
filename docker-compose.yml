@@ -30,7 +30,7 @@ services:
     container_name: inventory
     restart: always
     ports:
-      - '127.0.0.1:3000:3000'
+      - '127.0.0.1:${INVENTORY_PORT_GRPC}:${INVENTORY_PORT_GRPC}'
     env_file:
       - .env
     networks:
@@ -47,7 +47,7 @@ services:
     container_name: order
     restart: always
     ports:
-      - '127.0.0.1:3000:3000'
+      - '127.0.0.1:${ORDER_PORT_GRPC}:${ORDER_PORT_GRPC}'
     env_file:
       - .env
     networks:
@@ -64,7 +64,7 @@ services:
     container_name: product
     restart: always
     ports:
-      - '127.0.0.1:3000:3000'
+      - '127.0.0.1:${PRODUCT_PORT_GRPC}:${PRODUCT_PORT_GRPC}'
     env_file:
       - .env
     networks:
@@ -81,7 +81,7 @@ services:
     container_name: user
     restart: always
     ports:
-      - '127.0.0.1:50051:50051'
+      - '127.0.0.1:${USER_PORT_GRPC}:${USER_PORT_GRPC}'
     env_file:
       - .env
     networks:
