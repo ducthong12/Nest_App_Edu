@@ -6,12 +6,13 @@
 
 generator client {
   provider = "prisma-client-js"
-  output   = "../generated/prisma"
+  binaryTargets = ["native", "linux-musl-openssl-3.0.x"]
+  output        = "../../../node_modules/@generated/inventory-service"
 }
 
 generator docs {
   provider = "node node_modules/prisma-docs-generator"
-  output   = "../generated/docs" 
+  output        = "../../../node_modules/@generated/docs-inventory-service"
 }
 
 datasource db {
