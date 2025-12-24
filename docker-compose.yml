@@ -13,7 +13,7 @@ services:
     restart: always
     # QUAN TRỌNG: Chỉ bind vào 127.0.0.1 để không lộ ra internet, chỉ Nginx Host mới gọi được
     ports:
-      - '127.0.0.1:3000:3000'
+      - '127.0.0.1:${API_GATEWAY_PORT}:${API_GATEWAY_PORT}'
     env_file:
       - .env
     networks:
